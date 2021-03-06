@@ -1,13 +1,36 @@
 ﻿using System;
+using System.IO;
+using System.Text.Json;
+using System.Collections.Generic;
 
 namespace wallpaper_changer
 {
     class Program
     {
+        public static string ConfigPath = Environment.CurrentDirectory + "//resources//config.json"; 
+
         static void Main(string[] args)
         {
             Debugger.Debug("Loading application...");
+            Config config = ReadConfig();
+            string[] formattedPaths = Config.FormatPaths(config.paths);
+            List<Wallpaper> wallpapers = Wallpaper.ToWallpapers(formattedPaths); 
+
+            WallpaperManager wallpaperManager = new WallpaperManager(wallpapers, config.general);
         }
+
+        private static Config ReadConfig()
+        {
+            Debugger.Debug("Reading config file...");
+            string content = File.ReadAllText(ConfigPath);
+
+            try {
+                Debugger.Debug("Trying convert to Config class...");
+                return JsonSerializer.Deserialize<Config>(content);
+            } catch (Exception ex) {
+                throw ex;
+            }
+        } 
     }
 
     class Debugger
