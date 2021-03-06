@@ -1,6 +1,10 @@
 {
   "general": {
     "time": 10000,
-    "loop": true,
-  }
+    "loop": true
+  },
+  "paths": [
+    "{root_path}//wallpapers//",
+    "{root_path}//"
+  ]
 }
