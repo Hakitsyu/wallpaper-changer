@@ -14,7 +14,7 @@ namespace wallpaper_changer
             Debugger.Debug("Loading application...");
             Config config = ReadConfig();
             string[] formattedPaths = Config.FormatPaths(config.paths);
-            List<Wallpaper> wallpapers = Wallpaper.ToWallpapers(formattedPaths); 
+            List<Wallpaper> wallpapers = WallpaperUtils.ToWallpapers(formattedPaths); 
 
             WallpaperManager wallpaperManager = new WallpaperManager(wallpapers, config.general);
         }

@@ -12,53 +12,18 @@ namespace wallpaper_changer
         public string Extension { get; }
         public string FileName { get; }
         public string FullFileName { get; }
-        public static List<String> AcceptedExtensions = new List<String> { "JPG", "GIF", "PNG", "JPE", "BMP", "WEBP" };
 
         public Wallpaper(string imagePath)
         {
-            if (!IsFile(imagePath))
+            if (!FileUtils.IsFile(imagePath))
                 throw new Exception(imagePath + " don't is file");
-            if (!IsImage(imagePath))
+            if (!FileUtils.IsImage(imagePath))
                 throw new Exception(imagePath + " don't is image");
 
             ImagePath = imagePath;
             Extension = Path.GetExtension(imagePath);
             FileName = Path.GetFileNameWithoutExtension(imagePath);
             FullFileName = Path.GetFileName(imagePath);
-        }
-
-        public static bool IsFile(string imagePath)
-        {
-            Debugger.Debug("Checking if is file " + imagePath);
-            return !File.GetAttributes(imagePath).HasFlag(FileAttributes.Directory);
-        }
-
-        public static bool IsImage(string imagePath)
-        {
-            Debugger.Debug("Checking if is image " + imagePath);
-            return AcceptedExtensions.Contains(Path.GetExtension(imagePath).Replace(".", "").ToUpper());
-        }
-
-        public static List<Wallpaper> ToWallpapers(string[] paths)
-        {
-            List<Wallpaper> wallpapers = new List<Wallpaper>();
-            foreach (string path in paths)
-            {
-                Debugger.Debug("Trying convert " + path);
-                if (File.GetAttributes(path).HasFlag(FileAttributes.Directory)) {
-                    Debugger.Debug("Reading directory " + path);
-
-                    string[] files = Directory.GetFiles(path);
-                    foreach(string file in files)
-                    {
-                        if (IsImage(file))
-                            wallpapers.Add(new Wallpaper(file));
-                    }
-                } else
-                    wallpapers.Add(new Wallpaper(path));
-            }
-
-            return wallpapers;
         }
     }
 
