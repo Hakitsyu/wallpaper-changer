@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace wallpaper_changer
 {
@@ -26,21 +27,19 @@ namespace wallpaper_changer
         public static List<Wallpaper> ToWallpapers(string[] paths)
         {
             List<Wallpaper> wallpapers = new List<Wallpaper>();
-            foreach (string path in paths)
-            {
+            Array.ForEach<String>(paths, (path) => {
                 Debugger.Debug("Trying convert " + path);
-                if (File.GetAttributes(path).HasFlag(FileAttributes.Directory)) {
+                if (!FileUtils.IsFile(path)) {
                     Debugger.Debug("Reading directory " + path);
 
                     string[] files = Directory.GetFiles(path);
-                    foreach(string file in files)
-                    {
+                    Array.ForEach<String>(files, (file) => {
                         if (FileUtils.IsImage(file))
                             wallpapers.Add(new Wallpaper(file));
-                    }
-                } else
+                    });
+                } else if (FileUtils.IsImage(path))
                     wallpapers.Add(new Wallpaper(path));
-            }
+            });
 
             return wallpapers;
         }
