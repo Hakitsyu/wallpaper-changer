@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace wallpaper_changer
 {
@@ -12,18 +14,22 @@ namespace wallpaper_changer
     {
         public General general { get; set; } = new General();
         public string[] paths { get; set; } = new string[] {};
+    }
 
-        public static string[] FormatPaths(string[] paths)
+    class ConfigFormatter
+    {
+        public static Dictionary<String, String> Replaces = new Dictionary<String, String> { 
+            { "root_path", Environment.CurrentDirectory },
+            { "config_path", Program.ConfigPath } 
+        };
+
+        public static string[] Format(string[] paths)
         {
-            string[] result = new string[paths.Length];
-            for (int i = 0; i < paths.Length; i++)
-            {
-                result[i] = paths[i]
-                    .Replace("{root_path}", Environment.CurrentDirectory)
-                    .Replace("{config_path}", Program.ConfigPath);
-            }
-
-            return result;
+            return paths.Select<String, String>((path) => {
+                foreach (KeyValuePair<String, String> entry in Replaces)
+                    path = path.Replace("{" + entry.Key + "}", entry.Value);
+                return path;
+            }).ToArray();
         }
     }
 }
