@@ -49,7 +49,6 @@ namespace wallpaper_changer
 
         private void WallpaperTask()
         {
-            Console.WriteLine("FODA-SE");
             bool run = true;
             while (run)
             {
