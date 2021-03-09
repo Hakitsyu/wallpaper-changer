@@ -62,10 +62,7 @@ namespace wallpaper_changer
 
         private bool isConcluded()
         {
-            if (!GeneralConfig.loop) {
-                return CurrentIndex >= Wallpapers.Count - 1 ? true : false;
-            } else
-                return false;
+            return (!GeneralConfig.loop) ? CurrentIndex >= Wallpapers.Count - 1 : false;
         }
 
         public void Next()
