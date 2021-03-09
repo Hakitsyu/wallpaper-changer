@@ -7,16 +7,18 @@ namespace wallpaper_changer
 {
     class Program
     {
-        public static string ConfigPath = Environment.CurrentDirectory + "//resources//config.json"; 
+        public static string ConfigPath = Environment.CurrentDirectory + "/resources/config.json"; 
 
-        static void Main(string[] args)
+        static public void Main(string[] args)
         {
             Debugger.Debug("Loading application...");
             Config config = ReadConfig();
-            string[] formattedPaths = Config.FormatPaths(config.paths);
+            string[] formattedPaths = ConfigFormatter.Format(config.paths);
             List<Wallpaper> wallpapers = WallpaperUtils.ToWallpapers(formattedPaths); 
 
             WallpaperManager wallpaperManager = new WallpaperManager(wallpapers, config.general);
+            wallpaperManager.Task.Start();
+            wallpaperManager.Task.Wait();
         }
 
         private static Config ReadConfig()

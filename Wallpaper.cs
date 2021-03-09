@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace wallpaper_changer
 {
@@ -33,16 +33,40 @@ namespace wallpaper_changer
         public int CurrentIndex { get; set; }
         public Wallpaper CurrentWallpaper { get; set; }
         public General GeneralConfig { get; set; }
+        public Task Task { get; }
 
         [DllImport("user32.dll")]
-        private static extern bool SystemParametersInfo(uint uiAction, uint uiParam, string pvParam, uint fWinIni);
-    
+        public static extern bool SystemParametersInfo(uint uiAction, uint uiParam, string pvParam, uint fWinIni);
+
         public WallpaperManager(List<Wallpaper> wallpapers, General generalConfig)
         {
             Wallpapers = wallpapers;
             CurrentIndex = 0;
             CurrentWallpaper = Wallpapers[CurrentIndex];
             GeneralConfig = generalConfig;
+            Task = new Task(WallpaperTask);
+        }
+
+        private void WallpaperTask()
+        {
+            Console.WriteLine("FODA-SE");
+            bool run = true;
+            while (run)
+            {
+                UpdateWallpaper();
+                Task.Delay(GeneralConfig.time).Wait();
+                run = !isConcluded();
+                if (run)
+                    Next();
+            }
+        }
+
+        private bool isConcluded()
+        {
+            if (!GeneralConfig.loop) {
+                return CurrentIndex >= Wallpapers.Count - 1 ? true : false;
+            } else
+                return false;
         }
 
         public void Next()
