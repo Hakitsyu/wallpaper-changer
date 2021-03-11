@@ -1,7 +1,11 @@
 {
   "general": {
-    "time": 2000,
-    "loop": true
+    "time": 3600000,
+    "loop": true,
+    "notification": {
+      "enable": true,
+      "timeout": 2000
+    }
   },
   "paths": [
     "{root_path}/wallpapers/",

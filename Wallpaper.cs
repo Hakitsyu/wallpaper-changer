@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace wallpaper_changer
 {
@@ -34,6 +35,7 @@ namespace wallpaper_changer
         public Wallpaper CurrentWallpaper { get; set; }
         public General GeneralConfig { get; set; }
         public Task Task { get; }
+        private NotifyIcon NotifyIcon;
 
         [DllImport("user32.dll")]
         public static extern bool SystemParametersInfo(uint uiAction, uint uiParam, string pvParam, uint fWinIni);
@@ -45,6 +47,9 @@ namespace wallpaper_changer
             CurrentWallpaper = Wallpapers[CurrentIndex];
             GeneralConfig = generalConfig;
             Task = new Task(WallpaperTask);
+            
+            NotifyIcon = new NotifyIcon();
+            NotifyIcon.Icon = System.Drawing.SystemIcons.Information;
         }
 
         private void WallpaperTask()
@@ -85,9 +90,20 @@ namespace wallpaper_changer
             UpdateWallpaper();
         }
 
+        private void ShowNotification()
+        {
+            if (GeneralConfig.notification.enable) {
+                Debugger.Debug("Showing the notification");
+
+                NotifyIcon.Visible = true;
+                NotifyIcon.ShowBalloonTip(GeneralConfig.notification.timeout, "Updating the wallpaper", "New wallpaper is " + CurrentWallpaper.FileName, ToolTipIcon.Info);
+            }
+        }
+
         public void UpdateWallpaper()
         {
             Debugger.Debug("Updating wallpaper to " + CurrentWallpaper.ImagePath);
+            ShowNotification();
             SystemParametersInfo(0x0014, 0, CurrentWallpaper.ImagePath, 0);
         }
     }

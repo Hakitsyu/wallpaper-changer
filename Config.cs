@@ -8,6 +8,13 @@ namespace wallpaper_changer
     {
         public int time { get; set; } = 10000;
         public bool loop { get; set; } = true;
+        public NotificationConfig notification { get; set; } = new NotificationConfig();
+    }
+
+    class NotificationConfig
+    {
+        public bool enable { get; set; } = true;
+        public int timeout { get; set; } = 2000;
     }
 
     class Config
